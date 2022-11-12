@@ -18,8 +18,8 @@ namespace PVentaRest.ViewModel
  
         }
 
-        private int _ID;
-        public int ID { get { return _ID; } set { SetValue(ref _ID, value); } }
+        private string _ID;
+        public string ID { get { return _ID; } set { SetValue(ref _ID, value); } }
         
         private string _Name;
         public string Name { get { return _Name; } set { SetValue(ref _Name, value); } }

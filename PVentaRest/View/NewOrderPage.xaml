@@ -60,15 +60,15 @@
                         HeightRequest="30"
                         BackgroundColor="White" 
                         Command="{Binding AddDishToListCommand}"
+                        IsEnabled="{Binding AddDishBtnEnabled}"
                         CornerRadius="10"></ImageButton>
                 </StackLayout>
                 <StackLayout>
-                    <RefreshView 
-                    Command="{Binding ScrolledCommand}"
-                    IsRefreshing="{Binding IsRefreshing}">
+                    
                         <CollectionView
                         ItemsSource="{Binding FoodDishesSelected}"  
                             ItemsUpdatingScrollMode="KeepLastItemInView"
+                            EmptyView="Ningún platillo registrado aún."
                             
                     >
                             <CollectionView.ItemTemplate>
@@ -140,7 +140,6 @@
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
-                    </RefreshView>
 
                 </StackLayout>
             </StackLayout>
@@ -150,20 +149,23 @@
             </StackLayout>
             <StackLayout Margin="10" Orientation="Horizontal" >
                 <Button 
-                    TextColor="White" Text="Cerrar Orden" 
-                    FontSize="18" CornerRadius="10" 
-                    BackgroundColor="ForestGreen"
-                    HorizontalOptions="FillAndExpand"
-                    Command="{Binding CloseOrderCommand}"
-                    >
-                </Button>
-                <Button 
                     HorizontalOptions="FillAndExpand"
                     TextColor="White" Text="Limpiar Orden" 
                     FontSize="18" CornerRadius="10" 
                     BackgroundColor="Red"
                     Command="{Binding ClearOrderViewCommand}">
                 </Button>
+                <Button 
+                    TextColor="White" Text="Cerrar Orden" 
+                    FontSize="18" CornerRadius="10" 
+                    BackgroundColor="ForestGreen"
+                    HorizontalOptions="FillAndExpand"
+                    Command="{Binding CloseOrderCommand}"
+                    IsEnabled="{Binding EnableCloseOrderBtn}"
+
+                    >
+                </Button>
+                
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

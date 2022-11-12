@@ -1,9 +1,11 @@
 ﻿using PVentaRest.Class;
+using PVentaRest.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -14,49 +16,67 @@ namespace PVentaRest.ViewModel
         public NewOrderViewModel(INavigation navigation)
         {
             Navigation = navigation;
-            // get and list data from db and 
-            FoodDishesPickerDataSource = new List<DishViewModel>
-            {
-                new DishViewModel
-                {
-                    ID = 1,
-                    Name = "Hamburguesa con Queso",
-                    Price = 20,
-
-                },
-                new DishViewModel
-                {
-                    ID = 2,
-                    Name = "Pizza Peperoni (8 rebanadas)",
-                    Price = 100,
-                },
-                new DishViewModel
-                {
-                    ID = 3,
-                    Name = "Pizza Peperoni (4 rebanadas)",
-                    Price = 100,
-                },
-                new DishViewModel
-                {
-                    ID = 4,
-                    Name = "Pizza Jamón (8 rebanadas)",
-                    Price = 100,
-                }
-            }.OrderBy(c => c.Name).ToList();
+            GetDishes();
 
             FoodDishesSelected = new ObservableCollection<DishViewModel>();
+            EnableCloseOrderBtn = false;
+            AddDishBtnEnabled = false;
 
         }
 
-        private List<DishViewModel> _FoodDishesPickerDataSource;
-
-        public List<DishViewModel> FoodDishesPickerDataSource
+        private async Task GetDishes()
         {
+            FoodDishesPickerDataSource = new ObservableCollection<DishViewModel>();
+
+            Console.WriteLine("GET DISHES");
+            DishS dishService = new DishS();
+            List<Dish> dishes = new List<Dish>();
+            try
+            {
+                dishes = await dishService.List();
+            }
+            catch (Exception)
+            {
+
+                await DisplayAlert("Error", "Hubo un problema al listar los datos.", "OK");
+            }
+
+            foreach (Dish item in dishes)
+            {
+                Console.WriteLine(item.ID);
+                FoodDishesPickerDataSource.Add(
+                    new DishViewModel() { 
+                        ID = item.ID, Name = item.Name, Price = item.Price 
+                    }
+                );
+            }
+
+            FoodDishesPickerDataSource.OrderBy(c => c.Name).ToList();
+            if(FoodDishesPickerDataSource.Count > 0)
+            {
+                AddDishBtnEnabled = true;
+            }
+        }
+
+        //private List<DishViewModel> _FoodDishesPickerDataSource;
+
+        private bool _AddDishBtnEnabled;
+        public bool AddDishBtnEnabled
+        {
+            get
+            {
+                return _AddDishBtnEnabled;
+            }
             set
             {
-                SetValue(ref _FoodDishesPickerDataSource, value);
+                SetValue(ref _AddDishBtnEnabled, value);
             }
-            get { return _FoodDishesPickerDataSource; }
+        }
+
+        public ObservableCollection<DishViewModel> FoodDishesPickerDataSource
+        {
+            set;
+            get;
         }
 
         private DishViewModel _SelectedFoodDish;
@@ -86,6 +106,16 @@ namespace PVentaRest.ViewModel
             set
             {
                 SetValue(ref _AccountTotal, value);
+                if (AccountTotal > 0)
+                {
+                    EnableCloseOrderBtn = true;
+
+                }
+                else
+                {
+                    EnableCloseOrderBtn = false;
+
+                }
             }
         }
 
@@ -100,6 +130,21 @@ namespace PVentaRest.ViewModel
             set
             {
                 SetValue(ref _CustomerName, value);
+            }
+        }
+
+
+        private bool _EnableCloseOrderBtn;
+
+        public bool EnableCloseOrderBtn
+        {
+            get
+            {
+                return _EnableCloseOrderBtn;
+            }
+            set
+            {
+                SetValue(ref _EnableCloseOrderBtn, value);
             }
         }
 
@@ -150,6 +195,7 @@ namespace PVentaRest.ViewModel
                 await DisplayAlert("Info", "Ya has agregado este item, editalo.", "OK");
             }
             SelectedFoodDish = null;
+
             ComputeAccountTotal();
             IsBusy = false;
 
@@ -164,6 +210,7 @@ namespace PVentaRest.ViewModel
             if (areYouSure)
                 FoodDishesSelected.Clear();
             SelectedFoodDish = null;
+            CustomerName = "";
             ComputeAccountTotal();
 
             IsBusy = false;
@@ -252,24 +299,60 @@ namespace PVentaRest.ViewModel
             if (IsBusy)
                 return;
             IsBusy = true;
-            bool areYouSure = await Application.Current.MainPage.DisplayAlert("Atención", "¿Deseas guardar la orden?", "Si", "Cancelar");
-            if (areYouSure)
+            if(CustomerName != null && CustomerName != "")
             {
-                bool receiveMoney = await Application.Current.MainPage.DisplayAlert("Total", "El total es $" + AccountTotal.ToString(), "Guardar", "Cancelar");
-                if (receiveMoney)
+                bool areYouSure = await Application.Current.MainPage.DisplayAlert("Atención", "¿Deseas guardar la orden?", "Si", "Cancelar");
+                if (areYouSure)
                 {
-                    // send data to db
-                    await DisplayAlert("INFO","Orden Generada con éxito","OK");
+                    bool receiveMoney = await Application.Current.MainPage.DisplayAlert("Total", "El total es $" + AccountTotal.ToString(), "Guardar", "Cancelar");
+                    if (receiveMoney)
+                    {
+                        // send data to db
+                        List<Dish> dishes = new List<Dish>();
+                        OrderS orderS = new OrderS();
+                        foreach (DishViewModel item in FoodDishesSelected)
+                        {
+                            dishes.Add(new Dish() { 
+                                Name = item.Name,
+                                ID = item.ID,
+                                Price = item.Price,
+                                Total = item.Price * item.Quantity,
+                                Quantity = item.Quantity,
+                                
+                                
+                            
+                            });
+                        }
+                        await orderS.Add(
+                            new Order() { 
+                                CustomerName = CustomerName, 
+                                Hour = DateTime.Now, 
+                                Total = AccountTotal,
+                                Dishes = dishes,
+                                Status = "Pagada"
+                            }
+                        );
+                        await DisplayAlert("INFO", "Orden Generada con éxito", "OK");
 
-                    ClearOrderViewCommand.Execute(null);
-                    await Navigation.PopAsync();
+                        ClearOrderViewCommand.Execute(null);
+                        await Navigation.PopAsync();
+                    }
                 }
-
+            }
+            else
+            {
+                await DisplayAlert("Advertencia", "Ingresa el nombre del cliente", "OK");
             }
             IsBusy = false;
+        });
 
+        public ICommand RefreshCommand => new Command(async (obj) => {
+            if (IsBusy)
+                return;
+            IsBusy = true;
+            IsBusy = false;
+            IsRefreshing = false;
 
-        
         });
 
     }

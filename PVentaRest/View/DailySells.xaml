@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="PVentaRest.View.DailySells"
     Title="Venta Diaria"
+    x:Name="page"
     >
     <ContentPage.Content>
         <StackLayout Padding="10">
@@ -14,18 +15,18 @@
                 <Label
                     TextColor="Black"
                     FontSize="18"
+                    HorizontalOptions="CenterAndExpand"
                     Text="{Binding Total, StringFormat='Total Vendido $ {0}'}"
                     >
-
                 </Label>
+
+                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Padding="10" >
+                    <DatePicker
+                        Date="{Binding Hour}"
+                     >
+                    </DatePicker>
+                </StackLayout>
                 
-
-               
-                <DatePicker
-                    >
-
-
-                </DatePicker>
             </StackLayout>
             <RefreshView
                 IsRefreshing="{Binding IsRefreshing}"
@@ -33,29 +34,46 @@
                 >
                 <CollectionView
                     ItemsSource="{Binding DailySells}"  
-                   
+                    BackgroundColor="White"
+                    EmptyView="Ninguna venta registrada."
                     >
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Frame >
+                                <Frame 
+                                    CornerRadius="15"
+                                    BorderColor="{Binding BorderColorFrame}"
+                                    
+                                    Margin="10"
+                                    >
                                     <StackLayout
-                                      
-                                       
-                                        Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                                        <Label Text="{Binding Hour}">
+                                        Orientation="Horizontal" 
+                                        HorizontalOptions="FillAndExpand">
+                                        <StackLayout>
+                                            <Label Text="{Binding Hour}">
+                                            </Label>
+                                            <Label Text="{Binding CustomerName,StringFormat='Cte: {0}'}">
+                                            </Label>
+                                        </StackLayout>
 
-
-                                        </Label>
-                                        <Label Text="{Binding SellTotal}">
-
-
-                                        </Label>
-                                        <Label Text="{Binding CustomerName}">
-
-
-                                        </Label>
+                                        <StackLayout VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+                                            <Label Text="{Binding SellTotal,StringFormat='Total: ${0}'}">
+                                            </Label>
+                                            <Label Text="{Binding Status,StringFormat='Sts: {0}'}">
+                                            </Label>
+                                        </StackLayout>
                                     </StackLayout>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            NumberOfTapsRequired="1"
+                                            Command="{Binding 
+                                                    Path=BindingContext.WatchOrderCommand,
+                                                    Source={x:Reference Name=page}}" 
+                                            CommandParameter="{Binding .}"
+                                            >
+                                            
+                                        </TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
                                 </Frame>
 
                             </Grid>
@@ -71,6 +89,7 @@
                 TextColor="White"
                 BackgroundColor="Blue"
                 CornerRadius="15"
+                Command="{Binding MakeReportCommand}"
                 Text="Generar Reporte">
 
 

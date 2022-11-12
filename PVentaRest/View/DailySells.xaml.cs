@@ -7,11 +7,15 @@ namespace PVentaRest.View
 {
     public partial class DailySells : ContentPage
     {
+        DailySellViewModel vm;
         public DailySells()
         {
             InitializeComponent();
-            BindingContext = new DailySellViewModel(Navigation);
+            vm = new DailySellViewModel(Navigation);
+            BindingContext = vm;
         }
+
+        
     }
 }
 

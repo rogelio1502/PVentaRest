@@ -37,7 +37,7 @@
             </Grid>
             <StackLayout>
                 <RefreshView 
-                    Command="{Binding ScrolledCommand}"
+                    Command="{Binding RefreshCommand}"
                     IsRefreshing="{Binding IsRefreshing}">
                     <CollectionView
                         ItemsSource="{Binding FoodDishes}"              
@@ -57,8 +57,26 @@
                                             Padding="10"
                                             Orientation="Horizontal" BackgroundColor="White"
                                             >
-                                            <Label Text="{Binding Name}" HorizontalOptions="FillAndExpand"></Label>
-                                            <Label Text="{Binding Price, StringFormat='$ {0}'}"></Label>
+                                            <ImageButton
+                                               
+                                                WidthRequest="30"
+                                                        
+                                                VerticalOptions="CenterAndExpand"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding 
+                                                    Path=BindingContext.RemoveItemCommand,
+                                                    Source={x:Reference Name=page}}" 
+                                                CommandParameter="{Binding .}"
+                                                Source="remove.png"
+                                                        
+                                                ></ImageButton>
+                                            <Label 
+                                                VerticalOptions="CenterAndExpand"
+                                                Text="{Binding Name}" HorizontalOptions="FillAndExpand"></Label>
+                                            <Label 
+                                                VerticalOptions="CenterAndExpand"
+                                                Text="{Binding Price, StringFormat='$ {0}'}"></Label>
+                                            
                                             
                                         </StackLayout>
                                         <Frame.GestureRecognizers>
@@ -70,6 +88,7 @@
                                                 CommandParameter="{Binding .}"
                                                ></TapGestureRecognizer>
                                         </Frame.GestureRecognizers>
+                                        
                                         
                                     </Frame>
                                 </Grid>
@@ -84,6 +103,13 @@
                     Command="{Binding OpenFormToAddCommand}"
                     Text="Agregar Platillo" FontSize="18" 
                     BackgroundColor="Blue" TextColor="White" 
+                    CornerRadius="10"></Button>
+
+                <Button 
+                    IsVisible="{Binding ShowCancelBtn}"
+                    Command="{Binding CloseFormCommand}"
+                    Text="Cancelar" FontSize="18" 
+                    BackgroundColor="Red" TextColor="White" 
                     CornerRadius="10"></Button>
             </StackLayout>
         </StackLayout>

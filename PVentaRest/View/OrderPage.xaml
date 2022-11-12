@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PVentaRest.View.OrderPage"
+             Title="Detalle de la Orden">
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+            <Frame>
+                <StackLayout>
+                    <Label Text="{Binding OrderNumber, StringFormat='Orden: {0}'}"></Label>
+
+                    <Label Text="{Binding CustomerName, StringFormat='Cliente: {0}'}"></Label>
+                    <Label Text="{Binding Total, StringFormat='Total de la cuenta: ${0}'}"></Label>
+                    <Label Text="{Binding OrderDate, StringFormat='Fecha: {0}'}"></Label>
+                    <Label Text="{Binding Status, StringFormat='Estado: {0}'}"></Label>
+                </StackLayout>
+                
+            </Frame>
+            <CollectionView
+                ItemsSource="{Binding Dishes}"
+                EmptyView="Ningun platillo registrado.">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Frame CornerRadius="10" BorderColor="Black" Margin="5">
+                                <StackLayout VerticalOptions="Center" Orientation="Horizontal">
+                                    <StackLayout VerticalOptions="CenterAndExpand" Orientation="Horizontal">
+                                        <Label Text="{Binding Name, StringFormat='Platillo: {0}'}"></Label>
+
+                                    </StackLayout>
+                                    <StackLayout HorizontalOptions="EndAndExpand">
+                                        <Label Text="{Binding Quantity, StringFormat='Cantidad: {0}'}"></Label>
+                                        <Label Text="{Binding Price, StringFormat='Subtotal: {0}'}"></Label>
+                                        
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <StackLayout Orientation="Horizontal" >
+                <Button 
+                    CornerRadius="10" 
+                    Text="Cancelar" 
+                    TextColor="White" 
+                    BackgroundColor="Red" 
+                    HorizontalOptions="FillAndExpand"
+                    Command="{Binding CancelOrderCommand}"
+                    IsEnabled="{Binding EnableCancelOrderBtn}"
+                    ></Button>
+                <Button 
+                    CornerRadius="10" 
+                    Text="Pagada" 
+                    TextColor="White" 
+                    BackgroundColor="Blue" 
+                    HorizontalOptions="FillAndExpand"
+                    Command="{Binding ActiveOrderCommand}"
+                    IsEnabled="{Binding EnableActiveOrderBtn}"
+                    ></Button>
+                <Button 
+                    CornerRadius="10" 
+                    Text="Imprimir" 
+                    TextColor="White" 
+                    BackgroundColor="Green" 
+                    HorizontalOptions="FillAndExpand"
+                    Command="{Binding GoToReportCommand}"
+
+                    ></Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
