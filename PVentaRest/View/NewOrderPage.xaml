@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PVentaRest.View.NewOrderPage"
+             Title="Nueva Orden"
+             NavigationPage.HasNavigationBar="False"
+             x:Name="page"
+             
+             
+             >
+    <ContentPage.Content>
+        
+        <StackLayout>
+            <StackLayout 
+                BackgroundColor="White" 
+                Orientation="Horizontal"
+                
+             >
+                <Image
+                Source="left.png" 
+                VerticalOptions="Start"
+                HorizontalOptions="Start"
+                Margin="10"
+                HeightRequest="40"
+                WidthRequest="40"
+                >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}"></TapGestureRecognizer>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label 
+                    Text="Nueva Orden" 
+                    VerticalOptions="CenterAndExpand" 
+                    HorizontalOptions="EndAndExpand"
+                    Margin="0,0,15,0"
+                    FontSize="25"
+                    FontAttributes="Bold"></Label>
+                
+            </StackLayout>
+            <StackLayout Margin="10">
+                <StackLayout Orientation="Horizontal">
+                    <Entry 
+                        MaxLength="20"
+                        Placeholder="Nombre del cliente" Text="{Binding CustomerName}" HorizontalOptions="FillAndExpand"></Entry>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Picker 
+                        Title="Selecciona un platillo"
+                        ItemsSource="{Binding FoodDishesPickerDataSource}" 
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedFoodDish}" 
+                        HorizontalOptions="FillAndExpand">
+                    </Picker>
+                    <ImageButton 
+                        Source="plus.png"
+                        WidthRequest="50"
+                        Padding="10"
+                        BorderColor="Green"
+                        BorderWidth="1"
+                        HeightRequest="30"
+                        BackgroundColor="White" 
+                        Command="{Binding AddDishToListCommand}"
+                        CornerRadius="10"></ImageButton>
+                </StackLayout>
+                <StackLayout>
+                    <RefreshView 
+                    Command="{Binding ScrolledCommand}"
+                    IsRefreshing="{Binding IsRefreshing}">
+                        <CollectionView
+                        ItemsSource="{Binding FoodDishesSelected}"  
+                            ItemsUpdatingScrollMode="KeepLastItemInView"
+                            
+                    >
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate  >
+                                    <Grid >
+                                        <Frame CornerRadius="10" BorderColor="Black" Margin="2" >
+                                            <StackLayout Orientation="Horizontal" Padding="5" >
+                                                <StackLayout Orientation="Vertical" BackgroundColor="White" Margin="5,5,10,5" >
+                                                    <Button 
+                                                        BackgroundColor="Green"
+                                                        TextColor="White"
+                                                        FontAttributes="Bold"
+                                                        CornerRadius="10"
+                                                        Text="+" WidthRequest="30" FontSize="20" Padding="2"
+                                                        Command="{Binding 
+                                                            Path=BindingContext.IncrementQuantityCommand,
+                                                            Source={x:Reference Name=page}}" 
+                                                        CommandParameter="{Binding .}"
+                                                        ></Button>
+                                                    <Button 
+                                                        BackgroundColor="Red"
+                                                        TextColor="White"
+                                                        FontAttributes="Bold"
+                                                        CornerRadius="10"
+                                                        Text="-" WidthRequest="30" FontSize="20" Padding="2"
+                                                        Command="{Binding 
+                                                            Path=BindingContext.DecrementQuantityCommand,
+                                                            Source={x:Reference Name=page}}" 
+                                                        CommandParameter="{Binding .}"></Button>
+                                                </StackLayout>
+                                                <Label 
+                                                    Text="{Binding Name}" 
+                                                    VerticalOptions="Center" 
+                                                    HorizontalOptions="Center" 
+                                                    FontSize="18"></Label>
+                                                <StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical" HorizontalOptions="EndAndExpand">
+                                                    <Label 
+                                                    Text="{Binding Price,  StringFormat='$ {0}'}" 
+                                                        FontAttributes="Bold"
+                                                        FontSize="18"
+                                                    VerticalOptions="Center"
+                                                    ></Label>
+                                                    <Label 
+                                                    Text="{Binding Quantity,  StringFormat='Q: {0}'}" 
+                                                    FontAttributes="Bold"
+                                                     FontSize="18"
+
+                                                    VerticalOptions="Center"
+                                                    ></Label>
+                                                    <ImageButton
+                                                        Margin="0,15,0,5"
+                                                        WidthRequest="30"
+                                                        
+                                                        
+                                                        BackgroundColor="Transparent"
+                                                        Command="{Binding 
+                                                            Path=BindingContext.RemoveItemCommand,
+                                                            Source={x:Reference Name=page}}" 
+                                                        CommandParameter="{Binding .}"
+                                                        Source="remove.png"
+                                                        
+                                                        ></ImageButton>
+                                                </StackLayout>
+                                               
+                                            </StackLayout>
+                                        </Frame>
+                                        
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </RefreshView>
+
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Margin="10" Orientation="Horizontal" HorizontalOptions="StartAndExpand" >
+                <Label Text="{Binding AccountTotal, StringFormat='Total de la cuenta $ {0}'}" FontSize="17" FontAttributes="Bold"></Label>
+                <!--<Label Text="Total de la cuenta $ 0.00" FontSize="17" FontAttributes="Bold"></Label>-->
+            </StackLayout>
+            <StackLayout Margin="10" Orientation="Horizontal" >
+                <Button 
+                    TextColor="White" Text="Cerrar Orden" 
+                    FontSize="18" CornerRadius="10" 
+                    BackgroundColor="ForestGreen"
+                    HorizontalOptions="FillAndExpand"
+                    Command="{Binding CloseOrderCommand}"
+                    >
+                </Button>
+                <Button 
+                    HorizontalOptions="FillAndExpand"
+                    TextColor="White" Text="Limpiar Orden" 
+                    FontSize="18" CornerRadius="10" 
+                    BackgroundColor="Red"
+                    Command="{Binding ClearOrderViewCommand}">
+                </Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+    <!--4463511514382025-->
+</ContentPage>

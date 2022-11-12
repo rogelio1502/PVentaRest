@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PVentaRest.View.MainMenu"
+             Title="Menú Principal"
+             BackgroundColor="IndianRed"
+             >
+    <ContentPage.Content>
+            <StackLayout Orientation="Vertical" Padding="10" VerticalOptions="CenterAndExpand">
+                <Frame 
+                    CornerRadius="10" 
+                    BorderColor="Black" 
+                    HeightRequest="40" 
+                    Margin="10"
+                    
+                    BackgroundColor="White"
+                    >
+                    <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+                        <Image
+                            Source="plus.png"
+                            Margin="3">
+                        
+                        </Image>
+                        <Label 
+                            Text="Nueva Orden" 
+                            FontSize="20" 
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            VerticalOptions="CenterAndExpand"
+                            ></Label>
+                    </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer
+                                    NumberOfTapsRequired="1"
+                                    Command="{Binding OpenNewOrderCommand}"></TapGestureRecognizer>
+                    </Frame.GestureRecognizers>
+            </Frame>
+                <Frame 
+                    CornerRadius="10" 
+                    BorderColor="Black" 
+                    HeightRequest="40" 
+                    Margin="10"
+                    
+                    BackgroundColor="White"
+                    >
+                    <StackLayout  
+                        VerticalOptions="CenterAndExpand" 
+                        HorizontalOptions="CenterAndExpand" 
+                        Orientation="Horizontal">
+                        <Image
+                            Source="new_menu.png"
+                            Margin="2">
+                        </Image>
+                        <Label 
+                            Text="Administrar Menú" 
+                            FontSize="20" 
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            VerticalOptions="CenterAndExpand"
+                            ></Label>
+                    
+                    </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer
+                                NumberOfTapsRequired="1"
+                                Command="{Binding OpenMenuManagementCommand}"></TapGestureRecognizer>
+                    </Frame.GestureRecognizers>
+                </Frame>
+                <Frame 
+                    CornerRadius="10" 
+                    BorderColor="Black" 
+                    HeightRequest="40" 
+                    Margin="10"
+                    
+                    BackgroundColor="White"
+                    >
+                    <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+                        <Image
+                            Source="hand.png"
+                            >
+                        </Image>
+                        <Label 
+                            Text="Venta Diaria" 
+                            FontSize="20" 
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            VerticalOptions="CenterAndExpand"
+                            ></Label>
+                    </StackLayout>
+                </Frame>
+
+                <Button 
+                    Text="Cerrar Sesión"  
+                    Command="{Binding LogoutCommand}" 
+                    CornerRadius="10" 
+                    Margin="10"
+                    BackgroundColor="Yellow"
+                    FontSize="20" 
+                    FontAttributes="Bold"
+                    TextColor="Black">
+                </Button>
+            </StackLayout>
+           
+    </ContentPage.Content>
+</ContentPage>

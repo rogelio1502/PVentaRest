@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PVentaRest.View.MenuManagementPage"
+             Title="Platillos"
+             x:Name="page"
+             >
+    <ContentPage.Content>
+        <StackLayout  >
+            <Grid MinimumHeightRequest="70" 
+                  Padding="10" 
+                  IsVisible="{Binding ShowForm}" 
+                  BackgroundColor="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition ></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Entry 
+                    Text="{Binding DishName}"
+                    Placeholder="Platillo" Grid.Column="0" Grid.ColumnSpan="2" 
+                    MaxLength="50"></Entry>
+                <Entry 
+                    Text="{Binding DishPrice}"
+                    MaxLength="3"
+                    Placeholder="Precio" Grid.Column="0" Grid.Row="1" Keyboard="Numeric"></Entry>
+                <Button Text="Guardar" 
+                        TextColor="White"
+                        BackgroundColor="ForestGreen"
+                        Grid.Column="1" 
+                        Grid.Row="1" 
+                        Command="{Binding SaveDishCommand}"
+                        VerticalOptions="CenterAndExpand" CornerRadius="10"></Button>
+            </Grid>
+            <StackLayout>
+                <RefreshView 
+                    Command="{Binding ScrolledCommand}"
+                    IsRefreshing="{Binding IsRefreshing}">
+                    <CollectionView
+                        ItemsSource="{Binding FoodDishes}"              
+                    >
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate  >
+                                <Grid >
+                                    <Frame 
+                                        VerticalOptions="CenterAndExpand"
+                                        Padding="10"
+                                        CornerRadius="10"
+                                        BorderColor="Black"
+                                        Margin="10,10,10,10"
+                                        >
+                                        <StackLayout
+                                            VerticalOptions="CenterAndExpand"
+                                            Padding="10"
+                                            Orientation="Horizontal" BackgroundColor="White"
+                                            >
+                                            <Label Text="{Binding Name}" HorizontalOptions="FillAndExpand"></Label>
+                                            <Label Text="{Binding Price, StringFormat='$ {0}'}"></Label>
+                                            
+                                        </StackLayout>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                NumberOfTapsRequired="1"
+                                                Command="{Binding 
+                                                    Path=BindingContext.OpenFormToEditCommand,
+                                                    Source={x:Reference Name=page}}" 
+                                                CommandParameter="{Binding .}"
+                                               ></TapGestureRecognizer>
+                                        </Frame.GestureRecognizers>
+                                        
+                                    </Frame>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </RefreshView>
+                
+            </StackLayout>
+            <StackLayout Margin="10">
+                <Button 
+                    Command="{Binding OpenFormToAddCommand}"
+                    Text="Agregar Platillo" FontSize="18" 
+                    BackgroundColor="Blue" TextColor="White" 
+                    CornerRadius="10"></Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
