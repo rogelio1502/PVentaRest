@@ -40,5 +40,14 @@ namespace PVentaRest.ViewModel
             await Navigation.PushAsync(new NewOrderPage());
             IsBusy = false;
         });
+
+        public ICommand OpenDailySellsCommand => new Command(async () =>
+        {
+            if (IsBusy)
+                return;
+            IsBusy = true;
+            await Navigation.PushAsync(new DailySells());
+            IsBusy = false;
+        });
     }
 }

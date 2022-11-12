@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="PVentaRest.View.DailySells"
+    Title="Venta Diaria"
+    >
+    <ContentPage.Content>
+        <StackLayout Padding="10">
+           <StackLayout
+                HorizontalOptions="CenterAndExpand"
+                BackgroundColor="White"
+                Padding="30,5,30,5">
+                <Label
+                    TextColor="Black"
+                    FontSize="18"
+                    Text="{Binding Total, StringFormat='Total Vendido $ {0}'}"
+                    >
+
+                </Label>
+                
+
+               
+                <DatePicker
+                    >
+
+
+                </DatePicker>
+            </StackLayout>
+            <RefreshView
+                IsRefreshing="{Binding IsRefreshing}"
+                Command="{Binding RefreshCommand}"
+                >
+                <CollectionView
+                    ItemsSource="{Binding DailySells}"  
+                   
+                    >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Frame >
+                                    <StackLayout
+                                      
+                                       
+                                        Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding Hour}">
+
+
+                                        </Label>
+                                        <Label Text="{Binding SellTotal}">
+
+
+                                        </Label>
+                                        <Label Text="{Binding CustomerName}">
+
+
+                                        </Label>
+                                    </StackLayout>
+                                </Frame>
+
+                            </Grid>
+
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </RefreshView>
+            <Button
+                HorizontalOptions="FillAndExpand"
+                TextColor="White"
+                BackgroundColor="Blue"
+                CornerRadius="15"
+                Text="Generar Reporte">
+
+
+            </Button>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
+
