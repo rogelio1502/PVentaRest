@@ -16,7 +16,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v12.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
@@ -94,7 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PVentaRest\PVentaRest.csproj">
-      <Project>{1956FCB3-3139-45F8-9B8B-2072EE7C303D}</Project>
+      <Project>{C09C1D75-6041-44FC-A0B4-37BC21A1AF0C}</Project>
       <Name>PVentaRest</Name>
     </ProjectReference>
   </ItemGroup>

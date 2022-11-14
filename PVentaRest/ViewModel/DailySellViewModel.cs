@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PVentaRest.Class;
 using PVentaRest.Services;
 using PVentaRest.View;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace PVentaRest.ViewModel
@@ -17,7 +16,7 @@ namespace PVentaRest.ViewModel
         public DailySellViewModel(INavigation navigation)
         {
             Navigation = navigation;
-            Total = 100;
+            
             DailySells = new ObservableCollection<DailySell>();
             Hour = DateTime.Now;
             BorderColorFrame = Color.Gray;
@@ -53,6 +52,7 @@ namespace PVentaRest.ViewModel
         public async Task GetOrders()
         {
             DailySells.Clear();
+            Total = 0;
 
             Console.WriteLine("GET ORDERS");
             OrderS orderS = new OrderS();
@@ -60,6 +60,7 @@ namespace PVentaRest.ViewModel
             try
             {
                 orders = await orderS.List();
+
             }
             catch (Exception)
             {
@@ -72,6 +73,7 @@ namespace PVentaRest.ViewModel
                 if(item.Hour.Date == Hour.Date)
                 {
                     Console.WriteLine(item.Status);
+                    Total = Total + item.Total;
                     DailySells.Add(
                         new DailySell()
                         {
@@ -118,6 +120,28 @@ namespace PVentaRest.ViewModel
                 Console.WriteLine("Hola mundi");
                 DailySell ds = (DailySell)obj;
                 await Navigation.PushAsync(new OrderPage(ds.ID));
+                
+            }
+        );
+
+        public ICommand MakeReportCommand => new Command(
+            async(obj) =>
+            {
+                if(DailySells.Count > 0)
+                {
+                    Console.WriteLine(Hour.Date.ToString("yyyy-MM-dd"));
+                    await Browser.OpenAsync(
+                    String.Format(
+                        "https://us-central1-boreal-foundry-364519.cloudfunctions.net/prv-restaurant/daily-report/{0}.pdf",
+                        Hour.Date.ToString("yyyy-MM-dd")
+                        ),
+                    BrowserLaunchMode.SystemPreferred
+                    );
+                }
+                else
+                {
+                    await DisplayAlert("Atención", "No hay ventas en la fecha indicada.", "OK");
+                }
                 
             }
         );

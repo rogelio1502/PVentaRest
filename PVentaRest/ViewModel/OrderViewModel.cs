@@ -163,9 +163,16 @@ namespace PVentaRest.ViewModel
             await PdfClickHandler();
         });
 
+        
         private async Task  PdfClickHandler()
         {
-            await Browser.OpenAsync("https://www.africau.edu/images/default/sample.pdf", BrowserLaunchMode.SystemPreferred);
+            await Browser.OpenAsync(
+                String.Format(
+                    "https://us-central1-boreal-foundry-364519.cloudfunctions.net/prv-restaurant/order-ticket/{0}.pdf",
+                    OrderNumber
+                    ),
+                BrowserLaunchMode.SystemPreferred
+                );
         }
 
 
