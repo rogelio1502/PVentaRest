@@ -77,7 +77,11 @@ namespace PVentaRest.ViewModel
                     Console.WriteLine(Hour.Date);
                     Console.WriteLine(item.Status);
                     Console.WriteLine(item.Total);
-                    Total += item.Total;
+                    if(item.Status == "Pagada")
+                    {
+                        Total += item.Total;
+                    }
+                    
                     Console.WriteLine(Total);
                     DailySells.Add(
                         new DailySell()
