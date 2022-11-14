@@ -67,13 +67,18 @@ namespace PVentaRest.ViewModel
 
                 await DisplayAlert("Error", "Hubo un problema al listar los datos.", "OK");
             }
-
+            
             foreach (Order item in orders)
             {
+                
                 if(item.Hour.Date == Hour.Date)
                 {
+                    Console.WriteLine(item.Hour.Date);
+                    Console.WriteLine(Hour.Date);
                     Console.WriteLine(item.Status);
-                    Total = Total + item.Total;
+                    Console.WriteLine(item.Total);
+                    Total += item.Total;
+                    Console.WriteLine(Total);
                     DailySells.Add(
                         new DailySell()
                         {
@@ -87,6 +92,7 @@ namespace PVentaRest.ViewModel
                     ); 
                 }   
             }
+            Console.WriteLine(DailySells.Count);
         }
 
 
@@ -117,9 +123,13 @@ namespace PVentaRest.ViewModel
 
         public ICommand WatchOrderCommand => new Command(
             async (obj) => {
+                if (IsBusy)
+                    return;
+                IsBusy = true;
                 Console.WriteLine("Hola mundi");
                 DailySell ds = (DailySell)obj;
                 await Navigation.PushAsync(new OrderPage(ds.ID));
+                IsBusy = false;
                 
             }
         );
@@ -127,7 +137,10 @@ namespace PVentaRest.ViewModel
         public ICommand MakeReportCommand => new Command(
             async(obj) =>
             {
-                if(DailySells.Count > 0)
+                if (IsBusy)
+                    return;
+                IsBusy = true;
+                if (DailySells.Count > 0)
                 {
                     Console.WriteLine(Hour.Date.ToString("yyyy-MM-dd"));
                     await Browser.OpenAsync(
@@ -142,7 +155,8 @@ namespace PVentaRest.ViewModel
                 {
                     await DisplayAlert("Atención", "No hay ventas en la fecha indicada.", "OK");
                 }
-                
+                IsBusy = false;
+
             }
         );
 
