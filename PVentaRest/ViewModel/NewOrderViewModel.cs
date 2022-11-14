@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace PVentaRest.ViewModel
@@ -354,7 +355,7 @@ namespace PVentaRest.ViewModel
 
                                     });
                                 }
-                                await orderS.Add(
+                                var record = await orderS.Add(
                                     new Order()
                                     {
                                         CustomerName = CustomerName,
@@ -366,7 +367,15 @@ namespace PVentaRest.ViewModel
                                 );
                                 await DisplayAlert("INFO", "Orden Generada con éxito", "OK");
 
+
                                 ClearOrderViewCommand.Execute(null);
+                                await Browser.OpenAsync(
+                                String.Format(
+                                    "https://us-central1-boreal-foundry-364519.cloudfunctions.net/prv-restaurant/order-ticket/{0}.pdf",
+                                    record
+                                    ),
+                                BrowserLaunchMode.SystemPreferred
+                                ); ;
                                 await Navigation.PopAsync();
                             }
                         }
