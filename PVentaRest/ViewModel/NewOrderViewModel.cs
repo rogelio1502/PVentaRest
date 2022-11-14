@@ -304,38 +304,74 @@ namespace PVentaRest.ViewModel
                 bool areYouSure = await Application.Current.MainPage.DisplayAlert("Atención", "¿Deseas guardar la orden?", "Si", "Cancelar");
                 if (areYouSure)
                 {
-                    bool receiveMoney = await Application.Current.MainPage.DisplayAlert("Total", "El total es $" + AccountTotal.ToString(), "Guardar", "Cancelar");
-                    if (receiveMoney)
+                    int finalChange = 0;
+                    string change = await Application.Current.MainPage.DisplayPromptAsync("Pago", "El total es $" + AccountTotal.ToString() + " y paga con:", maxLength: 4, keyboard: Keyboard.Numeric);
+                    if(change == "")
                     {
-                        // send data to db
-                        List<Dish> dishes = new List<Dish>();
-                        OrderS orderS = new OrderS();
-                        foreach (DishViewModel item in FoodDishesSelected)
+                        await DisplayAlert("Error", "Ingresa la cantidad recibida.", "OK");
+                    }
+                    
+                    else
+                    {
+                        Console.WriteLine(change);
+                        Console.WriteLine(AccountTotal);
+                        bool _return = false;
+                        try
                         {
-                            dishes.Add(new Dish() { 
-                                Name = item.Name,
-                                ID = item.ID,
-                                Price = item.Price,
-                                Total = item.Price * item.Quantity,
-                                Quantity = item.Quantity,
-                                
-                                
-                            
-                            });
-                        }
-                        await orderS.Add(
-                            new Order() { 
-                                CustomerName = CustomerName, 
-                                Hour = DateTime.Now, 
-                                Total = AccountTotal,
-                                Dishes = dishes,
-                                Status = "Pagada"
-                            }
-                        );
-                        await DisplayAlert("INFO", "Orden Generada con éxito", "OK");
+                            int _change = int.Parse(change);
+                            finalChange = _change - AccountTotal;
 
-                        ClearOrderViewCommand.Execute(null);
-                        await Navigation.PopAsync();
+                            if(finalChange < 0)
+                            {
+                                throw new Exception("");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            await DisplayAlert("Error", "Cantidad recibida inválida", "OK");
+                            _return = true;
+                        }
+                        if(_return == false)
+                        {
+                            bool receiveMoney = await Application.Current.MainPage.DisplayAlert("Total", "El cambio es de $" + finalChange.ToString(), "Guardar Orden", "Cancelar");
+
+                            if (receiveMoney)
+                            {
+                                // send data to db
+                                List<Dish> dishes = new List<Dish>();
+                                OrderS orderS = new OrderS();
+                                foreach (DishViewModel item in FoodDishesSelected)
+                                {
+                                    dishes.Add(new Dish()
+                                    {
+                                        Name = item.Name,
+                                        ID = item.ID,
+                                        Price = item.Price,
+                                        Total = item.Price * item.Quantity,
+                                        Quantity = item.Quantity,
+
+
+
+                                    });
+                                }
+                                await orderS.Add(
+                                    new Order()
+                                    {
+                                        CustomerName = CustomerName,
+                                        Hour = DateTime.Now,
+                                        Total = AccountTotal,
+                                        Dishes = dishes,
+                                        Status = "Pagada"
+                                    }
+                                );
+                                await DisplayAlert("INFO", "Orden Generada con éxito", "OK");
+
+                                ClearOrderViewCommand.Execute(null);
+                                await Navigation.PopAsync();
+                            }
+                        }
+                        
+                    
                     }
                 }
             }
