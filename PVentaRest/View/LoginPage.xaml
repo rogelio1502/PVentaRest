@@ -11,7 +11,11 @@
             <StackLayout VerticalOptions="CenterAndExpand"  >
                 <StackLayout Orientation="Horizontal">
 
-                    <Entry HorizontalOptions="FillAndExpand"
+                    <Entry
+                        HorizontalOptions="FillAndExpand"
+                           Text="{Binding Username}"
+                           MaxLength="10"
+                           
                        Placeholder="Usuario">
 
                     </Entry>
@@ -22,6 +26,8 @@
                     HorizontalOptions="FillAndExpand" 
                     IsPassword="True"
                     Placeholder="Password"
+                    Text="{Binding Password}"
+                    MaxLength="10"
                     >
 
                     </Entry>

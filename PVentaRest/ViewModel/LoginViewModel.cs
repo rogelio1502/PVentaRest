@@ -17,12 +17,24 @@ namespace PVentaRest.ViewModel
         {
             Navigation = navigation;
         }
-
-        public ICommand ValidateCredentialsCommand => new Command((obj) => {
+        private string _Username;
+        public string Username { get { return _Username; } set { SetValue(ref _Username, value); } }
+        private string _Password;
+        public string Password { get { return _Password; } set { SetValue(ref _Password, value); } }
+        public ICommand ValidateCredentialsCommand => new Command(async (obj) => {
             if (IsBusy)
                 return;
             IsBusy = true;
-            Application.Current.MainPage = new NavigationPage(new MainMenu());
+            if(Username == "admin" && Password == "admin")
+            {
+                Application.Current.MainPage = new NavigationPage(new MainMenu());
+            }
+            else
+            {
+                await DisplayAlert("Error", "Credenciales Inválidas", "OK");
+            }
+            
+           
             IsBusy = false;
         });
     }
