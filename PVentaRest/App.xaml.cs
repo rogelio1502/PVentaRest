@@ -2,6 +2,8 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using PVentaRest.View;
+using Xamarin.Essentials;
+
 namespace PVentaRest
 {
     public partial class App : Application
@@ -10,8 +12,16 @@ namespace PVentaRest
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginPage());
             
+            if (Preferences.Get("logged", "") == "yes")
+            {
+                Application.Current.MainPage = new NavigationPage(new MainMenu());
+            }
+            else
+            {
+                MainPage = new NavigationPage(new LoginPage());
+            }
+
         }
 
         protected override void OnStart()

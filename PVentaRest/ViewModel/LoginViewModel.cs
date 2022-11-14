@@ -18,10 +18,7 @@ namespace PVentaRest.ViewModel
         public LoginViewModel(INavigation navigation)
         {
             Navigation = navigation;
-            if (Preferences.Get("logged","") == "yes")
-            {
-                Application.Current.MainPage = new NavigationPage(new MainMenu());
-            }
+            
         }
         private string _Username;
         public string Username { get { return _Username; } set { SetValue(ref _Username, value); } }
