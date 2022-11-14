@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace PVentaRest.ViewModel
@@ -11,11 +12,16 @@ namespace PVentaRest.ViewModel
     {
         public LoginViewModel()
         {
+            
         }
 
         public LoginViewModel(INavigation navigation)
         {
             Navigation = navigation;
+            if (Preferences.Get("logged","") == "yes")
+            {
+                Application.Current.MainPage = new NavigationPage(new MainMenu());
+            }
         }
         private string _Username;
         public string Username { get { return _Username; } set { SetValue(ref _Username, value); } }
@@ -27,6 +33,7 @@ namespace PVentaRest.ViewModel
             IsBusy = true;
             if(Username == "admin" && Password == "admin")
             {
+                Preferences.Set("logged", "yes");
                 Application.Current.MainPage = new NavigationPage(new MainMenu());
             }
             else

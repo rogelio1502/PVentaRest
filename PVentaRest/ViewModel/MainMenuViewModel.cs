@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace PVentaRest.ViewModel
@@ -20,6 +21,7 @@ namespace PVentaRest.ViewModel
                 return;
             IsBusy = true;
             Application.Current.MainPage = new NavigationPage(new LoginPage());
+            Preferences.Remove("logged");
             IsBusy = false;
 
         });
